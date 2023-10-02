@@ -9,7 +9,8 @@ public class User {
     private char gender;
 
     /**
-     * Констру
+     * Конструктор принимает введенную пользователем строку с данными, разделенными
+     * пробелом, и заполняет этими данными поля
      */
     public User() throws Exception {
         String[] data = getUserData().split(" ");
@@ -100,6 +101,9 @@ public class User {
         }
     }
 
+    /**
+     * Проверяет, чтобы все поля были заполнены
+     */
     public void checkInput() throws Exception {
         if (lastName == null) {
             throw new Exception("Вы не ввели ФИО"); // достаточно проверить фамилию. Если она равна null, значит о
