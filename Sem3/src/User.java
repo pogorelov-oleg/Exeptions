@@ -8,12 +8,23 @@ public class User {
     private long phone;
     private char gender;
 
+    /**
+     * Констру
+     */
     public User() throws Exception {
         String[] data = getUserData().split(" ");
         sortArray(data);
+        checkInput();
 
     }
 
+    /**
+     * Запрашивает у пользователя ввод данных вида вида:
+     * <Фамилия> <Имя> <Отчество> <датарождения> <номертелефона> <пол>
+     * Данные можно вводить в произвольном порядке (кроме ФИО)
+     * 
+     * @return введенные пользователем данные
+     */
     public String getUserData() throws Exception {
         String userData;
         int amountOfData = 6;
@@ -27,21 +38,27 @@ public class User {
 
         try (Scanner scanner = new Scanner(System.in)) {
             userData = scanner.nextLine();
+        }
 
-            if (userData.isEmpty()) {
-                throw new IllegalArgumentException("Вы ввели пустую строку");
-            }
-            if (userData.split(" ").length > amountOfData) {
-                throw new IllegalArgumentException("Вы ввели больше данных, чем требуется");
-            }
-            if (userData.split(" ").length < amountOfData) {
-                throw new IllegalArgumentException("Вы ввели меньше данных, чем требуется");
-            }
+        if (userData.isEmpty()) {
+            throw new IllegalArgumentException("Вы ввели пустую строку");
+        }
+        if (userData.split(" ").length > amountOfData) {
+            throw new IllegalArgumentException("Вы ввели больше данных, чем требуется");
+        }
+        if (userData.split(" ").length < amountOfData) {
+            throw new IllegalArgumentException("Вы ввели меньше данных, чем требуется");
         }
 
         return userData;
     }
 
+    /**
+     * Принимает неотсортированные данные о пользователе и распределяет их по полям
+     * класса User
+     * 
+     * @param data массив неотсортированных данных о пользователе
+     */
     private void sortArray(String[] data) throws Exception {
 
         for (int i = 0; i < data.length; i++) {
@@ -64,7 +81,7 @@ public class User {
                 if (!data[i].matches("[mMfF]")) {
                     throw new Exception("Неверно указан пол");
                 }
-                this.gender = data[i].charAt(0);
+                this.gender = Character.toLowerCase(data[i].charAt(0));
             }
             // проверка на номер телефона
             if (data[i].matches("\\d+")) {
@@ -72,16 +89,56 @@ public class User {
             }
             // проверка на ФИО
             if (this.lastName == null && data[i].length() > 1 && data[i].matches("[a-zA-Zа-яА-Я]+")) {
-
-                this.lastName = data[i];
-                this.name = data[i + 1];
-                this.patronymic = data[i + 2];
-
+                if (data[i + 1].matches("[a-zA-Zа-яА-Я]+") && data[i + 2].matches("[a-zA-Zа-яА-Я]+")) {
+                    this.lastName = data[i].substring(0, 1).toUpperCase() + data[i].substring(1).toLowerCase();
+                    this.name = data[i + 1].substring(0, 1).toUpperCase() + data[i + 1].substring(1).toLowerCase();
+                    this.patronymic = data[i + 2].substring(0, 1).toUpperCase()
+                            + data[i + 2].substring(1).toLowerCase();
+                }
             }
 
         }
     }
 
+    public boolean checkInput() throws Exception {
+        if (lastName == null) {
+            throw new Exception("Вы не ввели ФИО"); // достаточно проверить фамилию. Если она равна null, значит о
+                                                    // остальные поля ФИО тоже равны null
+        }
+        if (birth == null) {
+            throw new Exception("Вы не ввели дату рождения");
+        }
+        if (phone == 0) {
+            throw new Exception("Вы не ввели номер телефона ");
+        }
+        if (gender == 0) {
+            throw new Exception("Вы не ввели пол");
+        }
+
+        return true;
+    }
+
+    /**
+     * Геттер
+     * 
+     * @return фамилия пользователя
+     */
+    public String getLastName() {
+        return lastName;
+    }
+
+    /**
+     * Возвращает строку вида:
+     * <Фамилия> <Имя> <Отчество> <датарождения> <номертелефона> <пол>
+     */
+    public String toFile() {
+        return this.lastName + " " + this.name + " " + this.patronymic + " " + this.birth + " " + this.phone + " "
+                + this.gender;
+    }
+
+    /**
+     * Выводит в консоль информацию о пользователе
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -93,4 +150,3 @@ public class User {
     }
 
 }
-
