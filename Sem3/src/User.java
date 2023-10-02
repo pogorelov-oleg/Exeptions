@@ -100,7 +100,7 @@ public class User {
         }
     }
 
-    public boolean checkInput() throws Exception {
+    public void checkInput() throws Exception {
         if (lastName == null) {
             throw new Exception("Вы не ввели ФИО"); // достаточно проверить фамилию. Если она равна null, значит о
                                                     // остальные поля ФИО тоже равны null
@@ -114,8 +114,6 @@ public class User {
         if (gender == 0) {
             throw new Exception("Вы не ввели пол");
         }
-
-        return true;
     }
 
     /**
